@@ -1,0 +1,67 @@
+// problem link: 
+
+// naive solution: BACKTRACKING WITH SET
+// idea explanation: generate all permutations using recursion and swap elements to take a specific position in the array
+// time complexity: O(n * n!)
+// space complexity: O(n * n!)
+
+class Solution {
+public:
+    set<vector<int>> s;
+    void check(int index, vector<int>& nums, vector<vector<int>>& v, int n) {
+        if(index >= n && !s.count(nums)) {
+            v.push_back(nums);
+            s.insert(nums);
+            return;
+        }
+        for(int i = index; i < n; i++) {
+            swap(nums[index], nums[i]);
+            check(index + 1, nums, v, n);
+            swap(nums[index], nums[i]);
+        }
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> v;
+        check(0, nums, v, n);
+        return v;
+    }
+};
+
+
+// better solution: BACKTRACKING WITHOUT SET
+// idea explanation: same as naive solution, but don't store on set
+// time complexity: O(n	* n!)
+// space complexity: O(n * n!) -> worst case, but it is better in other scenarios 
+
+class Solution {
+public:
+    void check(int index, vector<int>& nums, vector<vector<int>>& v, int n) {
+	// base case (found a permutation or empty array)
+        if(index >= n && !s.count(nums)) {
+            v.push_back(nums);
+            return;
+        }
+
+        for(int i = index; i < n; i++) {
+	    bool skipNumber = false;
+	    for(int j=start; j<i; j++){
+		if(nums[j]==nums[i]){
+		    skipNumber = true;
+		    break;
+		}	
+	    }
+	    if(skipNumber) continue;
+            swap(nums[index], nums[i]);
+            check(index + 1, nums, v, n);
+            swap(nums[index], nums[i]);
+        }
+    }
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> v;
+	sort(nums.begin(), nums.end());
+        check(0, nums, v, n);
+        return v;
+    }
+};
